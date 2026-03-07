@@ -1,0 +1,7 @@
+shore-thing/
+  netlify/
+    functions/
+      generate.js     ← the JS file above (renamed from netlify-generate.js)
+  public/
+    index.html        ← your existing HTML file (shore-thing-index.html)
+  netlify.toml        ← the .toml file above
