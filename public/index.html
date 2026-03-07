@@ -710,7 +710,7 @@
 
     <div class="notice notice-warn">
       <span class="notice-icon">⚠</span>
-      <span><strong>Important:</strong> This tool helps you prepare an application — it does not submit it. You must review all text before submitting. If anything looks wrong or you're unsure, contact the MMO Grants Team on <strong>0208 026 5539</strong> or <strong>FaSS.queries@marinemanagement.org.uk</strong>. You can also submit a free Expression of Interest first to check eligibility.</span>
+      <span><strong>Important:</strong> This tool helps you prepare an application — it does not submit it. You must review all text before submitting. If anything looks wrong or you're unsure, contact the MMO Grants Team on <strong>0208 026 5539</strong> or <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="12547341413c636777607b7761527f73607b7c777f737c7375777f777c663c7d60753c6779">[email&#160;protected]</a></strong>. You can also submit a free Expression of Interest first to check eligibility.</span>
     </div>
 
   </div>
@@ -725,7 +725,7 @@
 </div><!-- /wrapper -->
 
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ─────────────────────────────────────────────────────────
 //  DATA
 // ─────────────────────────────────────────────────────────
@@ -1089,7 +1089,7 @@ async function generateApplication() {
   const userPrompt = buildUserPrompt(data);
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('/.netlify/functions/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1295,11 +1295,4 @@ IMPORTANT: Review all text carefully before submitting. You are responsible for 
   window.location.href = `mailto:${d.applicantEmail}?subject=${subject}&body=${body}`;
 }
 
-// ─────────────────────────────────────────────────────────
-//  BOOT
-// ─────────────────────────────────────────────────────────
-init();
-</script>
-
-</body>
-</html>
+// ────────────────────────────────────────────────
