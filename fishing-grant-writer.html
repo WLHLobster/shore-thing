@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shore Thing — Fishing Grant Writer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Code+Pro:wght@400;500&family=Libre+Franklin:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:    #0d1b2a;
+      --deep:    #162032;
+      --mid:     #1e3a52;
+      --teal:    #2a7f8f;
+      --teal-lt: #3aa8bb;
+      --gold:    #c9933a;
+      --gold-lt: #e8b96a;
+      --cream:   #f4ede0;
+      --cream-d: #e8d9c4;
+      --white:   #ffffff;
+      --muted:   #8ca3b4;
+      --danger:  #c0392b;
+      --warn:    #d4820a;
+      --ok:      #1e7a4f;
+      --font-head: 'Playfair Display', Georgia, serif;
+      --font-body: 'Libre Franklin', sans-serif;
+      --font-mono: 'Source Code Pro', monospace;
+      --radius: 4px;
+      --radius-lg: 8px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.35);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--cream);
+      font-family: var(--font-body);
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── CANVAS BACKGROUND ─────────────────────────── */
+    .bg-canvas {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 120% 60% at 15% 20%, rgba(42,127,143,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 80% at 85% 80%, rgba(201,147,58,0.05) 0%, transparent 55%),
+        var(--navy);
+    }
+    .bg-canvas::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='0.5' fill='%23ffffff' opacity='0.06'/%3E%3Ccircle cx='10' cy='10' r='0.4' fill='%23ffffff' opacity='0.04'/%3E%3Ccircle cx='70' cy='20' r='0.3' fill='%23ffffff' opacity='0.05'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    /* ─── LAYOUT ────────────────────────────────────── */
+    .wrapper {
+      position: relative; z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* ─── HEADER ────────────────────────────────────── */
+    header {
+      padding: 52px 0 40px;
+      text-align: center;
+      border-bottom: 1px solid rgba(201,147,58,0.25);
+      margin-bottom: 48px;
+    }
+    .logo-mark {
+      display: inline-block;
+      width: 52px; height: 52px;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 22px;
+    }
+    h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--cream);
+      line-height: 1.1;
+    }
+    h1 span { color: var(--gold); }
+    .tagline {
+      margin-top: 12px;
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── PROGRESS BAR ──────────────────────────────── */
+    .progress-wrap {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 40px;
+      align-items: center;
+    }
+    .progress-step {
+      height: 3px;
+      flex: 1;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      transition: background 0.4s;
+    }
+    .progress-step.done { background: var(--gold); }
+    .progress-step.active { background: var(--teal-lt); }
+    .progress-label {
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      margin-left: 8px;
+    }
+
+    /* ─── CARDS / PANELS ────────────────────────────── */
+    .panel {
+      background: var(--deep);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+    .panel-title {
+      font-family: var(--font-head);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--cream);
+      margin-bottom: 6px;
+    }
+    .panel-sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    /* ─── FORM ELEMENTS ─────────────────────────────── */
+    .field { margin-bottom: 22px; }
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      letter-spacing: 0.08em;
+      color: var(--gold-lt);
+      margin-bottom: 7px;
+      text-transform: uppercase;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius);
+      color: var(--cream);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 400;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--teal-lt);
+      background: rgba(42,127,143,0.07);
+    }
+    select option { background: var(--deep); color: var(--cream); }
+    textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+
+    /* Voice input row */
+    .voice-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .voice-row textarea { flex: 1; }
+    .voice-btn {
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 2px solid var(--teal);
+      background: transparent;
+      color: var(--teal-lt);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      margin-top: 0;
+    }
+    .voice-btn:hover { background: rgba(42,127,143,0.15); }
+    .voice-btn.listening { border-color: var(--gold); color: var(--gold); animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+    .voice-hint { font-size: 0.72rem; color: var(--muted); margin-top: 5px; }
+
+    /* Checkbox grid */
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .check-item:hover { border-color: rgba(42,127,143,0.4); background: rgba(42,127,143,0.06); }
+    .check-item.selected { border-color: var(--teal); background: rgba(42,127,143,0.12); }
+    .check-item input[type="checkbox"] { display: none; }
+    .check-icon {
+      width: 18px; height: 18px;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      border-radius: 3px;
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      transition: all 0.18s;
+    }
+    .check-item.selected .check-icon {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: white;
+    }
+    .check-label { font-size: 0.85rem; line-height: 1.4; color: var(--cream); }
+    .check-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+    /* Row layout for two fields */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
+
+    /* ─── BUTTONS ────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 13px 28px;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .btn-primary {
+      background: var(--teal);
+      color: white;
+    }
+    .btn-primary:hover:not(:disabled) { background: var(--teal-lt); transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-gold {
+      background: var(--gold);
+      color: var(--navy);
+    }
+    .btn-gold:hover:not(:disabled) { background: var(--gold-lt); transform: translateY(-1px); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-ghost:hover { color: var(--cream); border-color: rgba(255,255,255,0.25); }
+    .btn-sm { padding: 8px 16px; font-size: 0.82rem; }
+
+    .btn-row {
+      display: flex; gap: 12px; align-items: center;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    /* ─── ALERTS / NOTICES ───────────────────────────── */
+    .notice {
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 18px;
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .notice-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .notice-info  { background: rgba(42,127,143,0.12); border: 1px solid rgba(42,127,143,0.3); color: #9ad4de; }
+    .notice-warn  { background: rgba(212,130,10,0.1);  border: 1px solid rgba(212,130,10,0.3);  color: #e8c060; }
+    .notice-danger{ background: rgba(192,57,43,0.1);   border: 1px solid rgba(192,57,43,0.3);   color: #e88070; }
+
+    /* ─── LOADING SPINNER ────────────────────────────── */
+    .loading-wrap {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .spinner {
+      width: 48px; height: 48px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: var(--teal-lt);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+    .loading-sub { font-size: 0.75rem; color: rgba(140,163,180,0.6); margin-top: 8px; }
+
+    /* ─── OUTPUT ─────────────────────────────────────── */
+    .output-section { margin-bottom: 28px; }
+    .output-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .output-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(201,147,58,0.2);
+    }
+
+    .draft-box {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      padding: 24px;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      font-family: var(--font-body);
+      color: var(--cream);
+      max-height: 480px;
+      overflow-y: auto;
+    }
+    .draft-box::-webkit-scrollbar { width: 4px; }
+    .draft-box::-webkit-scrollbar-track { background: transparent; }
+    .draft-box::-webkit-scrollbar-thumb { background: var(--mid); border-radius: 2px; }
+
+    .flags-box {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .flag-item {
+      padding: 14px 18px;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    .flag-item.eligible   { background: rgba(30,122,79,0.12); border: 1px solid rgba(30,122,79,0.3); }
+    .flag-item.borderline { background: rgba(212,130,10,0.1);  border: 1px solid rgba(212,130,10,0.3); }
+    .flag-item.ineligible { background: rgba(192,57,43,0.1);   border: 1px solid rgba(192,57,43,0.3); }
+    .flag-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 2px;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .flag-item.eligible   .flag-badge { background: rgba(30,122,79,0.3);  color: #60e0a0; }
+    .flag-item.borderline .flag-badge { background: rgba(212,130,10,0.25); color: #f0c060; }
+    .flag-item.ineligible .flag-badge { background: rgba(192,57,43,0.25);  color: #f08070; }
+
+    .instructions-box {
+      background: var(--mid);
+      border-radius: var(--radius);
+      padding: 22px 26px;
+      font-size: 0.88rem;
+      line-height: 1.8;
+    }
+    .instructions-box ol { padding-left: 20px; }
+    .instructions-box li { margin-bottom: 8px; }
+    .instructions-box a { color: var(--teal-lt); }
+
+    .copy-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    .copied-tip {
+      font-size: 0.75rem;
+      color: var(--ok);
+      font-family: var(--font-mono);
+      align-self: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .copied-tip.show { opacity: 1; }
+
+    /* ─── DIVIDER ────────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin: 32px 0;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 32px 0 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin-top: 60px;
+    }
+    .footer-logo {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .footer-logo span { color: var(--gold); }
+    .footer-note {
+      font-size: 0.72rem;
+      color: rgba(140,163,180,0.5);
+      line-height: 1.7;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* ─── STEP VISIBILITY ────────────────────────────── */
+    .step { display: none; }
+    .step.active { display: block; animation: fadeUp 0.35s ease; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── GRANT % DISPLAY ────────────────────────────── */
+    .grant-calc {
+      background: rgba(42,127,143,0.08);
+      border: 1px solid rgba(42,127,143,0.2);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      color: var(--cream);
+      margin-top: 10px;
+      display: none;
+    }
+    .grant-calc.show { display: block; }
+    .grant-pct { font-size: 1.5rem; font-family: var(--font-head); color: var(--teal-lt); }
+    .grant-note { color: var(--muted); font-size: 0.78rem; margin-top: 4px; }
+
+    /* Error state */
+    .error-box {
+      background: rgba(192,57,43,0.1);
+      border: 1px solid rgba(192,57,43,0.35);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      font-size: 0.88rem;
+      color: #e88070;
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-canvas"></div>
+
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-mark">⚓</div>
+    <h1>Shore <span>Thing</span></h1>
+    <p class="tagline">AI Grant Writer for the Fishing Community — MMO FaSS &amp; Coastal Growth Fund</p>
+  </header>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-step active" id="prog-0"></div>
+    <div class="progress-step" id="prog-1"></div>
+    <div class="progress-step" id="prog-2"></div>
+    <div class="progress-step" id="prog-3"></div>
+    <span class="progress-label" id="progLabel">Step 1 of 4</span>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       STEP 1 — VESSEL & APPLICANT DETAILS
+  ══════════════════════════════════════════════════════════ -->
+  <div class="step active" id="step-0">
+
+    <div class="panel">
+      <div class="panel-title">About You &amp; Your Vessel</div>
+      <div class="panel-sub">Your details are used to generate your application and are not stored anywhere. You'll be asked again next time.</div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Your Name</label>
+          <input type="text" id="applicantName" placeholder="e.g. John Smith" />
+        </div>
+        <div class="field">
+          <label>Email Address</label>
+          <input type="email" id="applicantEmail" placeholder="for receiving your draft" />
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Vessel Name</label>
+          <input type="text" id="vesselName" placeholder="e.g. Scarlett Rose" />
+        </div>
+        <div class="field">
+          <label>Vessel Registration / PLN</label>
+          <input type="text" id="vesselReg" placeholder="e.g. WY123" />
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Home Port</label>
+          <input type="text" id="homePort" placeholder="e.g. Whitby" />
+        </div>
+        <div class="field">
+          <label>Vessel Overall Length</label>
+          <input type="text" id="vesselLength" placeholder="e.g. 8.5m" id="vesselLength" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Type of Fishing</label>
+        <select id="fishingType">
+          <option value="">— Select your main method —</option>
+          <option value="Potting / Creel fishing (crabs, lobsters, whelks)">Potting / Creel (crabs, lobsters, whelks)</option>
+          <option value="Netting (gill nets, trammel nets)">Netting (gill nets, trammel nets)</option>
+          <option value="Lining (longline, handline)">Lining (longline, handline)</option>
+          <option value="Trawling (demersal, beam)">Trawling (demersal, beam)</option>
+          <option value="Dredging (scallops, oysters)">Dredging (scallops, oysters)</option>
+          <option value="Aquaculture / shellfish farming">Aquaculture / shellfish farming</option>
+          <option value="Mixed / multiple methods">Mixed / multiple methods</option>
+          <option value="Recreational sea fishing organisation">Recreational sea fishing organisation</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Business Type <span style="color:var(--muted);font-size:0.75em;text-transform:none">(affects your grant percentage)</span></label>
+        <select id="bizType" onchange="updateGrantCalc()">
+          <option value="">— Select type —</option>
+          <option value="SSCF">Small-Scale Coastal Fisher — vessel under 12m, no towed gear (SSCF)</option>
+          <option value="Micro">Micro-entity (turnover under £632k, fewer than 10 employees)</option>
+          <option value="SME">SME (small / medium enterprise)</option>
+          <option value="NonSME">Larger enterprise (non-SME)</option>
+          <option value="PO">Producer Organisation (PO)</option>
+          <option value="FishAssoc">Fishermen's Association</option>
+          <option value="Public">Public body / local authority</option>
+        </select>
+
+        <div class="grant-calc" id="grantCalc">
+          <div>Indicative grant rate: <span class="grant-pct" id="grantPct">—</span></div>
+          <div class="grant-note" id="grantNote">You provide the remaining match funding from your own or borrowed funds.</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Have you received FaSS funding before?</label>
+        <select id="prevFass">
+          <option value="No">No — first application</option>
+          <option value="Yes">Yes — previous application(s)</option>
+          <option value="Unsure">Not sure</option>
+        </select>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="goToStep(1)">Continue → What Do You Need?</button>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       STEP 2 — WHAT ARE YOU APPLYING FOR?
+  ══════════════════════════════════════════════════════════ -->
+  <div class="step" id="step-1">
+
+    <div class="panel">
+      <div class="panel-title">What Do You Want to Apply For?</div>
+      <div class="panel-sub">Tick everything that applies — common items are listed below. Then describe your specific request in your own words. You can use the microphone if that's easier.</div>
+
+      <label>Common categories — tick any that apply</label>
+      <div class="check-grid" id="categoryGrid">
+        <!-- Populated by JS -->
+      </div>
+
+      <div class="field" style="margin-top:22px">
+        <label>Describe what you want — be specific</label>
+        <div class="voice-row">
+          <textarea id="projectDesc" placeholder="e.g. I need a new electric pot hauler. My current one is old and jams. It puts the crew at risk when they have to haul by hand in rough weather." rows="4"></textarea>
+          <div>
+            <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()" title="Click to speak">🎙</button>
+            <div class="voice-hint">Tap to<br>speak</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Why do you need it? What problem does it solve?</label>
+        <div class="voice-row">
+          <textarea id="projectReason" placeholder="e.g. The old hauler breaks down regularly and hauling by hand in heavy swell is dangerous. Two crew members have had minor injuries in the past year." rows="3"></textarea>
+          <div>
+            <button class="voice-btn" id="voiceBtn2" onclick="toggleVoice2()" title="Click to speak">🎙</button>
+            <div class="voice-hint">Tap to<br>speak</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Estimated total project cost (£)</label>
+          <input type="number" id="projectCost" placeholder="e.g. 4500" min="0" />
+        </div>
+        <div class="field">
+          <label>Do you have a supplier / quote yet?</label>
+          <select id="hasQuote">
+            <option value="No">No — not yet</option>
+            <option value="Yes">Yes — I have a quote</option>
+            <option value="Multiple">Yes — multiple quotes</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Anything else the grant writer should know?</label>
+        <textarea id="extraContext" placeholder="e.g. I've had two minor deck injuries this year. I fish solo. This equipment would also reduce fuel use by being more efficient." rows="2"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="goToStep(0)">← Back</button>
+        <button class="btn btn-primary" onclick="goToStep(2)">Continue → Generate Application</button>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       STEP 3 — GENERATING
+  ══════════════════════════════════════════════════════════ -->
+  <div class="step" id="step-2">
+
+    <div class="panel">
+      <div class="loading-wrap" id="loadingWrap">
+        <div class="spinner"></div>
+        <div class="loading-text">Drafting your application…</div>
+        <div class="loading-sub">Checking eligibility criteria · Selecting the right FaSS measures · Crafting your justification</div>
+      </div>
+      <div id="errorWrap" style="display:none"></div>
+    </div>
+
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       STEP 4 — OUTPUT
+  ══════════════════════════════════════════════════════════ -->
+  <div class="step" id="step-3">
+
+    <!-- Eligibility Summary -->
+    <div class="panel">
+      <div class="panel-title">Eligibility Assessment</div>
+      <div class="panel-sub">What the AI found when checking your request against FaSS criteria.</div>
+      <div class="flags-box" id="flagsBox"></div>
+    </div>
+
+    <!-- Draft Application -->
+    <div class="panel">
+      <div class="panel-title">Your Draft Application</div>
+      <div class="panel-sub">This text is ready to paste into the MMO FaSS portal, or into the Coastal Growth Fund system when it opens. Read it carefully before submitting — you are responsible for its accuracy.</div>
+
+      <div class="output-section">
+        <div class="output-label">Application Text</div>
+        <div class="draft-box" id="draftBox"></div>
+        <div class="copy-row">
+          <button class="btn btn-gold btn-sm" onclick="copyDraft()">📋 Copy Application Text</button>
+          <span class="copied-tip" id="copiedTip">Copied to clipboard ✓</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submission Instructions -->
+    <div class="panel">
+      <div class="panel-title">How to Submit</div>
+      <div class="panel-sub">Step-by-step instructions — also emailed to you.</div>
+      <div class="instructions-box" id="instructionsBox"></div>
+
+      <div class="btn-row" style="margin-top:24px">
+        <button class="btn btn-primary" id="emailBtn" onclick="sendEmail()">✉ Email Me This Draft</button>
+        <button class="btn btn-ghost" onclick="startAgain()">Start a New Application</button>
+      </div>
+    </div>
+
+    <div class="notice notice-warn">
+      <span class="notice-icon">⚠</span>
+      <span><strong>Important:</strong> This tool helps you prepare an application — it does not submit it. You must review all text before submitting. If anything looks wrong or you're unsure, contact the MMO Grants Team on <strong>0208 026 5539</strong> or <strong>FaSS.queries@marinemanagement.org.uk</strong>. You can also submit a free Expression of Interest first to check eligibility.</span>
+    </div>
+
+  </div>
+
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Shore <span>Thing</span></div>
+    <p class="footer-note">Built for the UK fishing community. Currently configured for the MMO Fisheries and Seafood Scheme (FaSS) and the upcoming Fishing and Coastal Growth Fund. This tool provides guidance only — always verify eligibility with the MMO before submitting. Grant criteria can change; last verified June 2025.</p>
+  </footer>
+
+</div><!-- /wrapper -->
+
+
+<script>
+// ─────────────────────────────────────────────────────────
+//  DATA
+// ─────────────────────────────────────────────────────────
+
+const CATEGORIES = [
+  { id: 'hauler',    label: 'Pot Hauler / Winch',        sub: 'Mechanical or electric hauling gear' },
+  { id: 'safety',   label: 'Safety Equipment',           sub: 'PLBs, PFDs, life jackets, VHF' },
+  { id: 'mob',      label: 'Man Overboard Prevention',   sub: 'Ladders, cut-off systems, rails' },
+  { id: 'stability',label: 'Vessel Stability',           sub: 'Stability monitoring, bilge systems' },
+  { id: 'fuel',     label: 'Fuel / Energy Efficiency',   sub: 'Propellers, fuel management, hybrid' },
+  { id: 'hold',     label: 'Fish Hold / Refrigeration',  sub: 'Hold lining, RSW, chilling systems' },
+  { id: 'selective',label: 'Selective / Low-Impact Gear',sub: 'Gear to reduce bycatch or seabed impact' },
+  { id: 'litter',   label: 'Marine Litter / Ghost Gear', sub: 'Collection or prevention equipment' },
+  { id: 'deck',     label: 'Deck Safety / Layout',       sub: 'Non-slip, guardrails, deck modifications' },
+  { id: 'comms',    label: 'Communications (Safety)',     sub: 'VHF radio only — not chart plotters' },
+  { id: 'diversify',label: 'Diversification',            sub: 'New income streams, direct sales, tourism' },
+  { id: 'training', label: 'Training / Skills',          sub: 'New entrant support, skills development' },
+  { id: 'enviro',   label: 'Environmental / Marine',     sub: 'Habitat restoration, conservation' },
+  { id: 'aqua',     label: 'Aquaculture Equipment',      sub: 'Shellfish or fin-fish farming' },
+  { id: 'process',  label: 'Seafood Processing',         sub: 'Processing equipment, premises improvements' },
+  { id: 'other',    label: 'Other / Not Listed',         sub: 'Describe below' },
+];
+
+const GRANT_RATES = {
+  SSCF:      { pct: '80%', note: 'Small-Scale Coastal Fisher (vessel under 12m, no towed gear) — you provide 20% match funding.' },
+  Micro:     { pct: '60%', note: 'Micro-entity — you provide 40% match funding.' },
+  SME:       { pct: '50%', note: 'SME — you provide 50% match funding.' },
+  NonSME:    { pct: '30%', note: 'Larger enterprise — you provide 70% match funding.' },
+  PO:        { pct: '75%', note: 'Producer Organisation — you provide 25% match funding.' },
+  FishAssoc: { pct: '75%', note: "Fishermen's Association — you provide 25% match funding." },
+  Public:    { pct: '75%', note: 'Public body — you provide 25% match funding.' },
+};
+
+// ─────────────────────────────────────────────────────────
+//  SYSTEM PROMPT — the grant-writing brain
+// ─────────────────────────────────────────────────────────
+
+const SYSTEM_PROMPT = `You are an expert MMO FaSS (Fisheries and Seafood Scheme) and Fishing and Coastal Growth Fund grant writer for the UK fishing community. You have deep knowledge of the scheme criteria and help fishermen make genuinely strong, legitimate applications.
+
+YOUR CORE RULES:
+1. Only help applicants highlight GENUINE benefits that align with the criteria. Never invent purposes that aren't real.
+2. If an item has multiple legitimate uses and one of them is eligible, frame the application around that genuine benefit.
+3. If something is genuinely ineligible with no legitimate workaround, say so clearly and kindly.
+4. If something is borderline, flag it as uncertain and recommend submitting a free Expression of Interest (EOI) to the MMO first.
+5. Use plain, professional English. The application text must be clear and specific.
+6. Always include required result indicators in your draft (e.g. number of injuries in past 12 months).
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FASS SCHEME OVERVIEW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Administered by Marine Management Organisation (MMO) on behalf of Defra. Provides match-funded grants to projects in England that support the sustainable seafood sector.
+Max contribution per applicant per year: £250,000.
+Applicants must pay upfront and claim back. Cannot start work before acknowledgement email from MMO.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KEY ELIGIBLE MEASURES (with guidance on use)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+M23 — IMPROVING HEALTH AND SAFETY ON BOARD VESSELS
+Best measure for most vessel-based applications. Covers:
+- Reducing man overboard (MOB) risk: deck layout improvements, guardrails, non-slip surfaces, entanglement prevention
+- Vessel stability improvements: monitoring technology, bilge keel modifications, watertight integrity
+- Entanglement prevention equipment
+ELIGIBLE PPE: PLBs, EPIRBs, safety knives, searchlights, MOB engine cut-off systems, PFDs, life jackets, MOB ladders, VHF radios, life rafts (under 7m vessels only)
+NOT ELIGIBLE PPE: flares, boots, gloves/gauntlets, binoculars, chart plotters, radar/AIS, autopilot, waders, smocks, thermal clothing, body harnesses
+NOT ELIGIBLE for M23: any mandatory MCA equipment; machines that directly assist the activity of fishing; equipment that increases fish-finding ability; engine upgrades; larger fish rooms
+Grant: 80% for vessels under 12m regardless of gear type. SSCF also 80%.
+
+M2 — IMPROVING ENERGY EFFICIENCY
+Covers: fuel management systems, hybrid propulsion, energy-efficient propellers/drive shafts, econometers, heat recovery systems, hydrogen/biofuel engines, bilge keels/bulbous bows for hydrodynamics, energy audits
+NOT ELIGIBLE: engine replacements/refits/overhauls, hull maintenance, antifouling
+
+M16 — IMPROVING VALUE AND QUALITY OF FISHERIES PRODUCTS
+Covers: investments that add value to catch, quality control, traceability, fish hold improvements (lining, refrigeration) with NO increase in capacity
+NOT ELIGIBLE: shore-based investments, items that can't demonstrate improved quality/value
+
+M21 — DIVERSIFICATION AND NEW FORMS OF INCOME
+Covers: new income streams from existing vessel/business, e.g. angling/charter trips, direct sales, seafood tourism, new product lines
+
+M12 — MARINE LITTER PREVENTION AND COLLECTION
+Covers: equipment to collect or prevent ghost gear and marine litter
+
+M25 — COOPERATIVE ACTIVITIES
+Covers: joint projects between fishers, shared equipment, collaborative schemes
+
+M19/M22 — SKILLS, KNOWLEDGE, NEW ENTRANTS
+Covers: training, knowledge transfer, supporting new entrants to the industry
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+HARD INELIGIBLES — NO WORKAROUND
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+These cannot be funded under any circumstances:
+- Engine replacements, refits, or overhauls
+- Chart plotters, sonar, fish finders, GPS plotters
+- Radar, AIS transponders
+- Autopilot systems
+- Hull maintenance or antifouling treatments
+- Buying, building, or importing a vessel
+- Vehicles not exclusively used for the project
+- Mandatory MCA safety equipment (what you're legally required to carry)
+- Equipment that increases vessel fishing capacity
+- Equipment that increases ability to find fish
+- Items already funded under a previous FaSS application on the same vessel
+- Operating costs / maintenance costs
+- Loan repayments or interest
+- Land or housing over 10% of project cost
+- Items bought before MMO acknowledgement email
+- Hire purchase agreements
+- Consumables (tablets, laptops, phones, memory sticks, printers)
+- Grant application costs
+- Items fully covered by insurance
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BORDERLINE ITEMS — RECOMMEND EOI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+These may or may not be eligible depending on the specific use and how the application is framed. Always recommend an Expression of Interest (EOI) first:
+- Pot haulers / mechanical haulers: eligible if primary justification is genuine entanglement risk reduction or safety, but M23 explicitly excludes "machines directly related to assist the activity of fishing" — outcome depends on MMO interpretation
+- Rope management systems with safety guards
+- Winches with safety modifications
+- Equipment that has dual use (fishing efficiency AND safety)
+- Hydraulic systems with safety benefits
+- Navigation equipment claimed for safety but primarily for fish finding
+- New outboard/inboard engines with fuel efficiency claimed (M2) — borderline, MMO may refuse
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FRAMING GUIDANCE (legitimate approaches)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+When a request has a genuine eligible benefit, frame it around that benefit. Only use these framings if the benefit is REAL:
+- Deck modifications → MOB/entanglement prevention (M23) if they genuinely improve deck safety
+- Fish hold lining/insulation → quality improvement (M16) — focuses on catch quality, not capacity
+- Fuel-efficient propeller → energy efficiency/emissions reduction (M2)
+- VHF radio upgrade → MOB communication (M23) — eligible if not mandatory
+- LED lighting conversion → energy efficiency (M2) if it reduces power consumption
+- Selective netting/gear → reduced environmental impact, bycatch reduction
+- Processing equipment → value adding (M16 or M34)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OUTPUT FORMAT REQUIRED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+You must respond with a valid JSON object ONLY. No preamble, no markdown, just JSON.
+
+{
+  "eligibilityFlags": [
+    {
+      "item": "Name of item or request",
+      "status": "eligible" | "borderline" | "ineligible",
+      "measure": "e.g. M23 Health and Safety",
+      "explanation": "Plain English explanation of eligibility and any framing used"
+    }
+  ],
+  "applicationDraft": "The full application text, ready to paste. Use \\n for line breaks. Include: project description, justification, expected benefits, result indicators (injuries/accidents in past 12 months, employment, profit change), and any notes about MCA pre-approval if vessel modifications are involved.",
+  "submissionInstructions": "HTML string with numbered steps for submitting the application, including the MMO portal URL and any specific advice for this application type",
+  "grantCalculation": {
+    "measure": "Primary FaSS measure code and name",
+    "grantRate": "e.g. 80%",
+    "estimatedGrant": "Calculated amount if cost was provided, otherwise blank",
+    "matchRequired": "Amount applicant needs to provide"
+  },
+  "warnings": ["Array of important warnings or caveats as plain strings"]
+}`;
+
+// ─────────────────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────────────────
+
+let currentStep = 0;
+let selectedCategories = new Set();
+let recognition = null;
+let isListening = false;
+let activeVoiceField = null;
+let generatedData = null;
+
+// ─────────────────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────────────────
+
+function init() {
+  buildCategoryGrid();
+}
+
+function buildCategoryGrid() {
+  const grid = document.getElementById('categoryGrid');
+  grid.innerHTML = CATEGORIES.map(cat => `
+    <div class="check-item" id="cat-${cat.id}" onclick="toggleCategory('${cat.id}')">
+      <input type="checkbox" />
+      <div class="check-icon" id="icon-${cat.id}"></div>
+      <div>
+        <div class="check-label">${cat.label}</div>
+        <div class="check-sub">${cat.sub}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleCategory(id) {
+  const el = document.getElementById(`cat-${id}`);
+  const icon = document.getElementById(`icon-${id}`);
+  if (selectedCategories.has(id)) {
+    selectedCategories.delete(id);
+    el.classList.remove('selected');
+    icon.innerHTML = '';
+  } else {
+    selectedCategories.add(id);
+    el.classList.add('selected');
+    icon.innerHTML = '✓';
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+//  GRANT CALC
+// ─────────────────────────────────────────────────────────
+
+function updateGrantCalc() {
+  const bizType = document.getElementById('bizType').value;
+  const calc = document.getElementById('grantCalc');
+  const pct = document.getElementById('grantPct');
+  const note = document.getElementById('grantNote');
+  if (bizType && GRANT_RATES[bizType]) {
+    pct.textContent = GRANT_RATES[bizType].pct;
+    note.textContent = GRANT_RATES[bizType].note;
+    calc.classList.add('show');
+  } else {
+    calc.classList.remove('show');
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+//  STEP NAVIGATION
+// ─────────────────────────────────────────────────────────
+
+function goToStep(n) {
+  // Basic validation on step 0
+  if (n === 1) {
+    const name = document.getElementById('applicantName').value.trim();
+    const email = document.getElementById('applicantEmail').value.trim();
+    if (!name || !email) {
+      alert('Please enter your name and email before continuing.');
+      return;
+    }
+  }
+
+  // Validation on step 1 before generating
+  if (n === 2) {
+    const desc = document.getElementById('projectDesc').value.trim();
+    if (!desc) {
+      alert('Please describe what you want to apply for before continuing.');
+      return;
+    }
+    generateApplication();
+  }
+
+  document.getElementById(`step-${currentStep}`).classList.remove('active');
+  currentStep = n;
+  document.getElementById(`step-${currentStep}`).classList.add('active');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress() {
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById(`prog-${i}`);
+    el.className = 'progress-step';
+    if (i < currentStep) el.classList.add('done');
+    else if (i === currentStep) el.classList.add('active');
+  }
+  document.getElementById('progLabel').textContent = `Step ${currentStep + 1} of 4`;
+}
+
+function startAgain() {
+  document.getElementById(`step-${currentStep}`).classList.remove('active');
+  currentStep = 0;
+  document.getElementById('step-0').classList.add('active');
+  updateProgress();
+
+  // Clear form
+  ['applicantName','applicantEmail','vesselName','vesselReg','homePort','vesselLength',
+   'projectDesc','projectReason','extraContext','projectCost'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  ['fishingType','bizType','prevFass','hasQuote'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.selectedIndex = 0;
+  });
+  selectedCategories.clear();
+  document.querySelectorAll('.check-item').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('.check-icon').forEach(el => el.innerHTML = '');
+  document.getElementById('grantCalc').classList.remove('show');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─────────────────────────────────────────────────────────
+//  VOICE INPUT
+// ─────────────────────────────────────────────────────────
+
+function setupRecognition(fieldId, btnId) {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    alert('Voice input is not supported in this browser. Try Chrome on desktop or Android.');
+    return null;
+  }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const r = new SR();
+  r.continuous = true;
+  r.interimResults = true;
+  r.lang = 'en-GB';
+  let finalTranscript = '';
+
+  r.onstart = () => {
+    isListening = true;
+    document.getElementById(btnId).classList.add('listening');
+  };
+  r.onend = () => {
+    isListening = false;
+    document.getElementById(btnId).classList.remove('listening');
+  };
+  r.onresult = (e) => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript + ' ';
+      else interim += e.results[i][0].transcript;
+    }
+    const field = document.getElementById(fieldId);
+    field.value = finalTranscript + interim;
+  };
+  r.onerror = (e) => {
+    console.error('Speech recognition error:', e.error);
+    isListening = false;
+    document.getElementById(btnId).classList.remove('listening');
+  };
+  return r;
+}
+
+let rec1 = null, rec2 = null;
+
+function toggleVoice() {
+  if (!rec1) rec1 = setupRecognition('projectDesc', 'voiceBtn');
+  if (!rec1) return;
+  if (isListening && activeVoiceField === 'desc') { rec1.stop(); activeVoiceField = null; }
+  else { if (isListening) { (activeVoiceField === 'reason' ? rec2 : rec1)?.stop(); }
+    rec1.start(); activeVoiceField = 'desc'; }
+}
+
+function toggleVoice2() {
+  if (!rec2) rec2 = setupRecognition('projectReason', 'voiceBtn2');
+  if (!rec2) return;
+  if (isListening && activeVoiceField === 'reason') { rec2.stop(); activeVoiceField = null; }
+  else { if (isListening) { (activeVoiceField === 'desc' ? rec1 : rec2)?.stop(); }
+    rec2.start(); activeVoiceField = 'reason'; }
+}
+
+// ─────────────────────────────────────────────────────────
+//  API CALL
+// ─────────────────────────────────────────────────────────
+
+async function generateApplication() {
+  document.getElementById('loadingWrap').style.display = 'block';
+  document.getElementById('errorWrap').style.display = 'none';
+
+  const data = collectFormData();
+  const userPrompt = buildUserPrompt(data);
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2500,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: userPrompt }]
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err?.error?.message || `API error ${response.status}`);
+    }
+
+    const result = await response.json();
+    const rawText = result.content[0].text;
+
+    let parsed;
+    try {
+      const clean = rawText.replace(/```json|```/g, '').trim();
+      parsed = JSON.parse(clean);
+    } catch (e) {
+      throw new Error('Could not parse AI response. Please try again.');
+    }
+
+    generatedData = { ...parsed, formData: data };
+    renderOutput(parsed, data);
+    goToStep(3);
+
+  } catch (err) {
+    document.getElementById('loadingWrap').style.display = 'none';
+    document.getElementById('errorWrap').style.display = 'block';
+    document.getElementById('errorWrap').innerHTML = `
+      <div class="error-box">
+        <strong>Something went wrong</strong><br>
+        ${err.message}<br><br>
+        <button class="btn btn-ghost btn-sm" onclick="goToStep(1)">← Go Back and Try Again</button>
+      </div>
+    `;
+  }
+}
+
+function collectFormData() {
+  return {
+    applicantName:    document.getElementById('applicantName').value.trim(),
+    applicantEmail:   document.getElementById('applicantEmail').value.trim(),
+    vesselName:       document.getElementById('vesselName').value.trim(),
+    vesselReg:        document.getElementById('vesselReg').value.trim(),
+    homePort:         document.getElementById('homePort').value.trim(),
+    vesselLength:     document.getElementById('vesselLength').value.trim(),
+    fishingType:      document.getElementById('fishingType').value,
+    bizType:          document.getElementById('bizType').value,
+    prevFass:         document.getElementById('prevFass').value,
+    selectedCategories: [...selectedCategories],
+    projectDesc:      document.getElementById('projectDesc').value.trim(),
+    projectReason:    document.getElementById('projectReason').value.trim(),
+    projectCost:      document.getElementById('projectCost').value.trim(),
+    hasQuote:         document.getElementById('hasQuote').value,
+    extraContext:      document.getElementById('extraContext').value.trim(),
+  };
+}
+
+function buildUserPrompt(d) {
+  const cats = d.selectedCategories.map(id => CATEGORIES.find(c => c.id === id)?.label).filter(Boolean);
+  const grantInfo = d.bizType && GRANT_RATES[d.bizType] ? GRANT_RATES[d.bizType].pct : 'Unknown';
+
+  return `Please write a FaSS grant application for the following applicant.
+
+APPLICANT DETAILS:
+- Name: ${d.applicantName || 'Not provided'}
+- Vessel: ${d.vesselName || 'Not provided'} (${d.vesselReg || 'no reg given'})
+- Home port: ${d.homePort || 'Not provided'}
+- Vessel length: ${d.vesselLength || 'Not provided'}
+- Fishing method: ${d.fishingType || 'Not provided'}
+- Business type: ${d.bizType || 'Not provided'} (indicative grant rate: ${grantInfo})
+- Previous FaSS applications: ${d.prevFass}
+
+WHAT THEY WANT TO APPLY FOR:
+Categories selected: ${cats.length ? cats.join(', ') : 'None selected'}
+Description: ${d.projectDesc}
+Reason / problem it solves: ${d.projectReason || 'Not provided'}
+Estimated cost: ${d.projectCost ? '£' + d.projectCost : 'Not provided'}
+Quote status: ${d.hasQuote}
+Additional context: ${d.extraContext || 'None'}
+
+Please assess eligibility, flag any items as eligible/borderline/ineligible, write the full application draft, and provide submission instructions. Return valid JSON only.`;
+}
+
+// ─────────────────────────────────────────────────────────
+//  RENDER OUTPUT
+// ─────────────────────────────────────────────────────────
+
+function renderOutput(data, formData) {
+  // Eligibility flags
+  const flagsBox = document.getElementById('flagsBox');
+  if (data.eligibilityFlags && data.eligibilityFlags.length) {
+    flagsBox.innerHTML = data.eligibilityFlags.map(f => `
+      <div class="flag-item ${f.status}">
+        <div class="flag-badge">${f.status} ${f.measure ? '· ' + f.measure : ''}</div>
+        <strong>${f.item}</strong><br>
+        <span style="color:var(--cream-d);font-size:0.83rem">${f.explanation}</span>
+      </div>
+    `).join('');
+  } else {
+    flagsBox.innerHTML = '<div class="notice notice-info"><span class="notice-icon">ℹ</span><span>No eligibility flags generated.</span></div>';
+  }
+
+  // Draft
+  document.getElementById('draftBox').textContent = data.applicationDraft || 'No draft generated.';
+
+  // Instructions
+  const instrBox = document.getElementById('instructionsBox');
+  if (data.submissionInstructions) {
+    instrBox.innerHTML = data.submissionInstructions;
+  } else {
+    instrBox.innerHTML = `<ol>
+      <li>Visit <a href="https://www.gov.uk/guidance/fisheries-and-seafood-scheme" target="_blank">gov.uk/guidance/fisheries-and-seafood-scheme</a> and log into the FaSS E-system.</li>
+      <li>Select the appropriate measure for your project.</li>
+      <li>Copy and paste the application text above into the relevant fields.</li>
+      <li>Attach any supplier quotes you have.</li>
+      <li>Submit and wait for acknowledgement email (within 10 working days) before purchasing anything.</li>
+      <li>For queries: 0208 026 5539 or FaSS.queries@marinemanagement.org.uk</li>
+    </ol>`;
+  }
+
+  // Warnings
+  if (data.warnings && data.warnings.length) {
+    data.warnings.forEach(w => {
+      const notice = document.createElement('div');
+      notice.className = 'notice notice-warn';
+      notice.innerHTML = `<span class="notice-icon">⚠</span><span>${w}</span>`;
+      document.getElementById('instructionsBox').after(notice);
+    });
+  }
+
+  // Grant calc
+  if (data.grantCalculation) {
+    const gc = data.grantCalculation;
+    if (gc.estimatedGrant || gc.grantRate) {
+      const summary = document.createElement('div');
+      summary.className = 'notice notice-info';
+      summary.innerHTML = `<span class="notice-icon">💷</span><span>
+        <strong>Indicative funding:</strong> Grant rate ${gc.grantRate || '—'} under ${gc.measure || '—'}
+        ${gc.estimatedGrant ? ` · Estimated grant: <strong>${gc.estimatedGrant}</strong>` : ''}
+        ${gc.matchRequired ? ` · Your match: <strong>${gc.matchRequired}</strong>` : ''}
+      </span>`;
+      document.getElementById('flagsBox').before(summary);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+//  COPY & EMAIL
+// ─────────────────────────────────────────────────────────
+
+function copyDraft() {
+  const text = document.getElementById('draftBox').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const tip = document.getElementById('copiedTip');
+    tip.classList.add('show');
+    setTimeout(() => tip.classList.remove('show'), 2500);
+  });
+}
+
+function sendEmail() {
+  if (!generatedData) return;
+  const d = generatedData.formData;
+  const subject = encodeURIComponent(`FaSS Grant Application Draft — ${d.vesselName || d.applicantName}`);
+
+  const instructions = document.getElementById('instructionsBox').innerText;
+  const draft = document.getElementById('draftBox').textContent;
+
+  const flags = (generatedData.eligibilityFlags || []).map(f =>
+    `[${f.status.toUpperCase()}] ${f.item}: ${f.explanation}`
+  ).join('\n');
+
+  const body = encodeURIComponent(
+`Your FaSS Grant Application Draft
+Generated by Shore Thing
+═══════════════════════════════════
+
+ELIGIBILITY SUMMARY
+${flags}
+
+════════════════════════════════════
+APPLICATION DRAFT (copy & paste into MMO portal)
+════════════════════════════════════
+${draft}
+
+════════════════════════════════════
+HOW TO SUBMIT
+════════════════════════════════════
+${instructions}
+
+————————————————————————————————————
+MMO Grants Team: 0208 026 5539 | FaSS.queries@marinemanagement.org.uk
+Apply at: https://www.gov.uk/guidance/fisheries-and-seafood-scheme
+
+IMPORTANT: Review all text carefully before submitting. You are responsible for the accuracy of your application. This tool provides guidance only.`
+  );
+
+  window.location.href = `mailto:${d.applicantEmail}?subject=${subject}&body=${body}`;
+}
+
+// ─────────────────────────────────────────────────────────
+//  BOOT
+// ─────────────────────────────────────────────────────────
+init();
+</script>
+
+</body>
+</html>
