@@ -32,12 +32,17 @@ export async function handler(event) {
     const data = await response.json();
 
     if (!response.ok) {
-      return { statusCode: response.status, body: JSON.stringify(data) };
+      console.error('Resend error:', JSON.stringify(data));
+      return {
+        statusCode: response.status,
+        body: JSON.stringify({ error: data.message || data.name || JSON.stringify(data) })
+      };
     }
 
     return { statusCode: 200, body: JSON.stringify({ success: true }) };
 
   } catch (err) {
+    console.error('Function error:', err.message);
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 }
