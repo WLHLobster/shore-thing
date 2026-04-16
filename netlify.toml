@@ -2,11 +2,6 @@
   publish = "public"
   functions = "netlify/functions"
 
-# Tells Netlify to use esbuild — required for Functions v2 (the new streaming format)
-[functions]
-  node_bundler = "esbuild"
-
-# Keeps the /api/generate URL working as before
 [[redirects]]
   from = "/api/generate"
   to = "/.netlify/functions/generate"
