@@ -1,40 +1,36 @@
 // netlify/functions/generate.js
-// Netlify Functions v2 — streams the Anthropic response directly to the browser.
-// This solves the 10-second timeout on the free tier: data starts flowing immediately
-// so the connection never sits idle long enough to time out.
+// Uses the classic exports.handler format (most compatible with Netlify free tier)
+// but reads Anthropic's SSE stream internally — solving the timeout.
+// Returns the assembled text as JSON once streaming is complete.
 
-export default async (req) => {
+exports.handler = async function(event) {
 
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' },
-    });
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ error: 'Method not allowed' })
+    };
   }
 
-  // Check API key is present
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return new Response(JSON.stringify({ error: 'API key not configured on server' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'API key not configured on server' })
+    };
   }
 
-  // Parse the incoming request body
   let body;
   try {
-    body = await req.json();
+    body = JSON.parse(event.body);
   } catch (e) {
-    return new Response(JSON.stringify({ error: 'Invalid request body' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'Invalid request body' })
+    };
   }
 
-  // Call Anthropic with stream: true added — this makes Anthropic send
-  // Server-Sent Events (SSE) instead of one big response blob
+  // Call Anthropic with stream: true — keeps the upstream connection alive
   const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -45,29 +41,56 @@ export default async (req) => {
     body: JSON.stringify({ ...body, stream: true }),
   });
 
-  // If Anthropic itself returned an error, pass it back
   if (!anthropicResponse.ok) {
     const errorText = await anthropicResponse.text();
-    return new Response(errorText, {
-      status: anthropicResponse.status,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return {
+      statusCode: anthropicResponse.status,
+      body: errorText
+    };
   }
 
-  // Pipe the Anthropic SSE stream straight back to the browser.
-  // The function returns immediately with an open stream — no waiting,
-  // no timeout, data flows through as Claude generates it.
-  return new Response(anthropicResponse.body, {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      'X-Accel-Buffering': 'no', // tells Netlify's edge not to buffer this
-    },
-  });
-};
+  // Read the SSE stream and accumulate all text deltas.
+  // The function stays active throughout — no idle timeout.
+  const reader = anthropicResponse.body.getReader();
+  const decoder = new TextDecoder();
+  let fullText = '';
+  let lineBuffer = '';
 
-// Tell Netlify to route /api/generate to this function
-export const config = {
-  path: '/api/generate',
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    lineBuffer += decoder.decode(value, { stream: true });
+    const lines = lineBuffer.split('\n');
+    lineBuffer = lines.pop();
+
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const eventData = line.slice(6).trim();
+      if (eventData === '[DONE]') continue;
+
+      try {
+        const chunk = JSON.parse(eventData);
+        if (
+          chunk.type === 'content_block_delta' &&
+          chunk.delta && chunk.delta.type === 'text_delta'
+        ) {
+          fullText += chunk.delta.text;
+        }
+      } catch (e) {
+        // Partial chunk at boundary — normal, ignore
+      }
+    }
+  }
+
+  // Return the assembled text in the same shape as the old non-streaming response.
+  // The index.html fetch code doesn't need to change — it still calls response.json()
+  // and reads result.content[0].text exactly as before.
+  return {
+    statusCode: 200,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      content: [{ type: 'text', text: fullText }]
+    })
+  };
 };
