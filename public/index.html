@@ -303,7 +303,7 @@
     .notice-warn  { background: rgba(212,130,10,0.1);  border: 1px solid rgba(212,130,10,0.3);  color: #e8c060; }
     .notice-danger{ background: rgba(192,57,43,0.1);   border: 1px solid rgba(192,57,43,0.3);   color: #e88070; }
 
-    /* ─── LOADING SPINNER ────────────────────────────── */
+    /* ─── LOADING ────────────────────────────────────── */
     .loading-wrap {
       text-align: center;
       padding: 60px 20px;
@@ -533,7 +533,7 @@
         </div>
         <div class="field">
           <label>Vessel Overall Length</label>
-          <input type="text" id="vesselLength" placeholder="e.g. 8.5m" id="vesselLength" />
+          <input type="text" id="vesselLength" placeholder="e.g. 8.5m" />
         </div>
       </div>
 
@@ -685,7 +685,7 @@
     <!-- Draft Application -->
     <div class="panel">
       <div class="panel-title">Your Draft Application</div>
-      <div class="panel-sub">This text is ready to paste into the MMO FaSS portal, or into the Coastal Growth Fund system when it opens. Read it carefully before submitting — you are responsible for its accuracy.</div>
+      <div class="panel-sub">This text is ready to paste into the MMO FaSS portal. Read it carefully before submitting — you are responsible for its accuracy.</div>
 
       <div class="output-section">
         <div class="output-label">Application Text</div>
@@ -711,7 +711,7 @@
 
     <div class="notice notice-warn">
       <span class="notice-icon">⚠</span>
-      <span><strong>Important:</strong> This tool helps you prepare an application — it does not submit it. You must review all text before submitting. If anything looks wrong or you're unsure, contact the MMO Grants Team on <strong>0208 026 5539</strong> or <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="12547341413c636777607b7761527f73607b7c777f737c7375777f777c663c7d60753c6779">[email&#160;protected]</a></strong>. You can also submit a free Expression of Interest first to check eligibility.</span>
+      <span><strong>Important:</strong> This tool helps you prepare an application — it does not submit it. You must review all text before submitting. If anything looks wrong or you're unsure, contact the MMO Grants Team on <strong>0208 026 5539</strong> or <strong>FaSS.queries@marinemanagement.org.uk</strong>. You can also submit a free Expression of Interest first to check eligibility.</span>
     </div>
 
   </div>
@@ -720,13 +720,13 @@
   <!-- FOOTER -->
   <footer>
     <div class="footer-logo">Shore <span>Thing</span></div>
-    <p class="footer-note">Built for the UK fishing community. Currently configured for the MMO Fisheries and Seafood Scheme (FaSS) and the upcoming Fishing and Coastal Growth Fund. This tool provides guidance only — always verify eligibility with the MMO before submitting. Grant criteria can change; last verified June 2025.</p>
+    <p class="footer-note">Built for the UK fishing community. Currently configured for the MMO Fisheries and Seafood Scheme (FaSS) — now open and accepting applications. This tool provides guidance only — always verify eligibility with the MMO before submitting. Grant criteria last verified April 2026.</p>
   </footer>
 
 </div><!-- /wrapper -->
 
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ─────────────────────────────────────────────────────────
 //  DATA
 // ─────────────────────────────────────────────────────────
@@ -764,7 +764,7 @@ const GRANT_RATES = {
 //  SYSTEM PROMPT — the grant-writing brain
 // ─────────────────────────────────────────────────────────
 
-const SYSTEM_PROMPT = `You are an expert MMO FaSS (Fisheries and Seafood Scheme) and Fishing and Coastal Growth Fund grant writer for the UK fishing community. You have deep knowledge of the scheme criteria and help fishermen make genuinely strong, legitimate applications.
+const SYSTEM_PROMPT = `You are an expert MMO FaSS (Fisheries and Seafood Scheme) grant writer for the UK fishing community. You have deep knowledge of the scheme criteria and help fishermen make genuinely strong, legitimate applications.
 
 YOUR CORE RULES:
 1. Only help applicants highlight GENUINE benefits that align with the criteria. Never invent purposes that aren't real.
@@ -777,9 +777,17 @@ YOUR CORE RULES:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 FASS SCHEME OVERVIEW
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STATUS: FaSS is currently OPEN and ACTIVE (April 2026). Applications are accepted on a first-come, first-served basis.
 Administered by Marine Management Organisation (MMO) on behalf of Defra. Provides match-funded grants to projects in England that support the sustainable seafood sector.
-Max contribution per applicant per year: £250,000.
-Applicants must pay upfront and claim back. Cannot start work before acknowledgement email from MMO.
+Applicants must pay upfront and claim back. Cannot start work before receiving acknowledgement email from MMO.
+Applications submitted via the FaSS E-system: https://fass.marinemanagement.org.uk/Public/Login.aspx
+MMO will write to applicants within 12 weeks to confirm success or failure, provided the application is complete.
+
+QUOTE REQUIREMENTS (private applicants):
+- Items up to £1,500: at least 1 quote
+- £1,500.01 to £5,000: at least 2 quotes
+- £5,000.01 to £60,000: at least 3 quotes
+- Over £60,000: at least 3 formal tender submissions with scoring evidence
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 KEY ELIGIBLE MEASURES (with guidance on use)
@@ -793,7 +801,7 @@ Best measure for most vessel-based applications. Covers:
 ELIGIBLE PPE: PLBs, EPIRBs, safety knives, searchlights, MOB engine cut-off systems, PFDs, life jackets, MOB ladders, VHF radios, life rafts (under 7m vessels only)
 NOT ELIGIBLE PPE: flares, boots, gloves/gauntlets, binoculars, chart plotters, radar/AIS, autopilot, waders, smocks, thermal clothing, body harnesses
 NOT ELIGIBLE for M23: any mandatory MCA equipment; machines that directly assist the activity of fishing; equipment that increases fish-finding ability; engine upgrades; larger fish rooms
-Grant: 80% for vessels under 12m regardless of gear type. SSCF also 80%.
+Grant: 80% for SSCF (vessel under 12m, no towed gear). Check detailed guidance for other vessel types.
 
 M2 — IMPROVING ENERGY EFFICIENCY
 Covers: fuel management systems, hybrid propulsion, energy-efficient propellers/drive shafts, econometers, heat recovery systems, hydrogen/biofuel engines, bilge keels/bulbous bows for hydrodynamics, energy audits
@@ -801,7 +809,7 @@ NOT ELIGIBLE: engine replacements/refits/overhauls, hull maintenance, antifoulin
 
 M16 — IMPROVING VALUE AND QUALITY OF FISHERIES PRODUCTS
 Covers: investments that add value to catch, quality control, traceability, fish hold improvements (lining, refrigeration) with NO increase in capacity
-NOT ELIGIBLE: shore-based investments, items that can't demonstrate improved quality/value
+NOT ELIGIBLE: shore-based investments, items that cannot demonstrate improved quality/value
 
 M21 — DIVERSIFICATION AND NEW FORMS OF INCOME
 Covers: new income streams from existing vessel/business, e.g. angling/charter trips, direct sales, seafood tourism, new product lines
@@ -826,39 +834,42 @@ These cannot be funded under any circumstances:
 - Hull maintenance or antifouling treatments
 - Buying, building, or importing a vessel
 - Vehicles not exclusively used for the project
-- Mandatory MCA safety equipment (what you're legally required to carry)
-- Equipment that increases vessel fishing capacity
+- Mandatory MCA safety equipment (what you are legally required to carry)
+- Equipment that increases vessel fishing capacity (including engine power, gear efficiency, fish-detection technology, hold/storage capacity, trip duration)
 - Equipment that increases ability to find fish
-- Items already funded under a previous FaSS application on the same vessel
-- Operating costs / maintenance costs
+- Items already funded under a previous FaSS application on the same vessel (same type of equipment)
+- Operating costs / maintenance costs / scheduled maintenance
 - Loan repayments or interest
 - Land or housing over 10% of project cost
-- Items bought before MMO acknowledgement email
+- Items bought before MMO acknowledgement email is received
 - Hire purchase agreements
-- Consumables (tablets, laptops, phones, memory sticks, printers)
+- Consumables (tablets, laptops, phones, memory sticks, printers, subscription services)
 - Grant application costs
 - Items fully covered by insurance
+- Statutory or mandatory requirements of law and bylaws
+- Accommodation costs for suppliers or event attendees
+- Merchandise
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 BORDERLINE ITEMS — RECOMMEND EOI
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-These may or may not be eligible depending on the specific use and how the application is framed. Always recommend an Expression of Interest (EOI) first:
-- Pot haulers / mechanical haulers: eligible if primary justification is genuine entanglement risk reduction or safety, but M23 explicitly excludes "machines directly related to assist the activity of fishing" — outcome depends on MMO interpretation
+These may or may not be eligible depending on specific use and framing. Always recommend an Expression of Interest (EOI) first:
+- Pot haulers / mechanical haulers: eligible if primary justification is genuine entanglement risk reduction or safety, but M23 explicitly excludes machines that directly assist the activity of fishing — outcome depends on MMO interpretation
 - Rope management systems with safety guards
 - Winches with safety modifications
-- Equipment that has dual use (fishing efficiency AND safety)
-- Hydraulic systems with safety benefits
+- Equipment with dual use (fishing efficiency AND safety)
+- Hydraulic systems with genuine safety benefits
 - Navigation equipment claimed for safety but primarily for fish finding
-- New outboard/inboard engines with fuel efficiency claimed (M2) — borderline, MMO may refuse
+- New outboard/inboard engines with fuel efficiency claimed under M2 — borderline, MMO may refuse
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-FRAMING GUIDANCE (legitimate approaches)
+FRAMING GUIDANCE (legitimate approaches only)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 When a request has a genuine eligible benefit, frame it around that benefit. Only use these framings if the benefit is REAL:
 - Deck modifications → MOB/entanglement prevention (M23) if they genuinely improve deck safety
-- Fish hold lining/insulation → quality improvement (M16) — focuses on catch quality, not capacity
+- Fish hold lining/insulation → quality improvement (M16) — focuses on catch quality, not capacity increase
 - Fuel-efficient propeller → energy efficiency/emissions reduction (M2)
-- VHF radio upgrade → MOB communication (M23) — eligible if not mandatory
+- VHF radio upgrade → MOB communication (M23) — eligible if not mandatory equipment
 - LED lighting conversion → energy efficiency (M2) if it reduces power consumption
 - Selective netting/gear → reduced environmental impact, bycatch reduction
 - Processing equipment → value adding (M16 or M34)
@@ -866,7 +877,7 @@ When a request has a genuine eligible benefit, frame it around that benefit. Onl
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 OUTPUT FORMAT REQUIRED
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-You must respond with a valid JSON object ONLY. No preamble, no markdown, just JSON.
+You must respond with a valid JSON object ONLY. No preamble, no markdown, no backticks — just the raw JSON.
 
 {
   "eligibilityFlags": [
@@ -922,8 +933,8 @@ function buildCategoryGrid() {
 }
 
 function toggleCategory(id) {
-  const el = document.getElementById(`cat-${id}`);
-  const icon = document.getElementById(`icon-${id}`);
+  const el = document.getElementById('cat-' + id);
+  const icon = document.getElementById('icon-' + id);
   if (selectedCategories.has(id)) {
     selectedCategories.delete(id);
     el.classList.remove('selected');
@@ -958,7 +969,6 @@ function updateGrantCalc() {
 // ─────────────────────────────────────────────────────────
 
 function goToStep(n) {
-  // Basic validation on step 0
   if (n === 1) {
     const name = document.getElementById('applicantName').value.trim();
     const email = document.getElementById('applicantEmail').value.trim();
@@ -968,7 +978,6 @@ function goToStep(n) {
     }
   }
 
-  // Validation on step 1 before generating
   if (n === 2) {
     const desc = document.getElementById('projectDesc').value.trim();
     if (!desc) {
@@ -978,42 +987,41 @@ function goToStep(n) {
     generateApplication();
   }
 
-  document.getElementById(`step-${currentStep}`).classList.remove('active');
+  document.getElementById('step-' + currentStep).classList.remove('active');
   currentStep = n;
-  document.getElementById(`step-${currentStep}`).classList.add('active');
+  document.getElementById('step-' + currentStep).classList.add('active');
   updateProgress();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function updateProgress() {
   for (let i = 0; i < 4; i++) {
-    const el = document.getElementById(`prog-${i}`);
+    const el = document.getElementById('prog-' + i);
     el.className = 'progress-step';
     if (i < currentStep) el.classList.add('done');
     else if (i === currentStep) el.classList.add('active');
   }
-  document.getElementById('progLabel').textContent = `Step ${currentStep + 1} of 4`;
+  document.getElementById('progLabel').textContent = 'Step ' + (currentStep + 1) + ' of 4';
 }
 
 function startAgain() {
-  document.getElementById(`step-${currentStep}`).classList.remove('active');
+  document.getElementById('step-' + currentStep).classList.remove('active');
   currentStep = 0;
   document.getElementById('step-0').classList.add('active');
   updateProgress();
 
-  // Clear form
   ['applicantName','applicantEmail','vesselName','vesselReg','homePort','vesselLength',
-   'projectDesc','projectReason','extraContext','projectCost'].forEach(id => {
+   'projectDesc','projectReason','extraContext','projectCost'].forEach(function(id) {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
-  ['fishingType','bizType','prevFass','hasQuote'].forEach(id => {
+  ['fishingType','bizType','prevFass','hasQuote'].forEach(function(id) {
     const el = document.getElementById(id);
     if (el) el.selectedIndex = 0;
   });
   selectedCategories.clear();
-  document.querySelectorAll('.check-item').forEach(el => el.classList.remove('selected'));
-  document.querySelectorAll('.check-icon').forEach(el => el.innerHTML = '');
+  document.querySelectorAll('.check-item').forEach(function(el) { el.classList.remove('selected'); });
+  document.querySelectorAll('.check-icon').forEach(function(el) { el.innerHTML = ''; });
   document.getElementById('grantCalc').classList.remove('show');
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1035,24 +1043,23 @@ function setupRecognition(fieldId, btnId) {
   r.lang = 'en-GB';
   let finalTranscript = '';
 
-  r.onstart = () => {
+  r.onstart = function() {
     isListening = true;
     document.getElementById(btnId).classList.add('listening');
   };
-  r.onend = () => {
+  r.onend = function() {
     isListening = false;
     document.getElementById(btnId).classList.remove('listening');
   };
-  r.onresult = (e) => {
+  r.onresult = function(e) {
     let interim = '';
     for (let i = e.resultIndex; i < e.results.length; i++) {
       if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript + ' ';
       else interim += e.results[i][0].transcript;
     }
-    const field = document.getElementById(fieldId);
-    field.value = finalTranscript + interim;
+    document.getElementById(fieldId).value = finalTranscript + interim;
   };
-  r.onerror = (e) => {
+  r.onerror = function(e) {
     console.error('Speech recognition error:', e.error);
     isListening = false;
     document.getElementById(btnId).classList.remove('listening');
@@ -1066,7 +1073,7 @@ function toggleVoice() {
   if (!rec1) rec1 = setupRecognition('projectDesc', 'voiceBtn');
   if (!rec1) return;
   if (isListening && activeVoiceField === 'desc') { rec1.stop(); activeVoiceField = null; }
-  else { if (isListening) { (activeVoiceField === 'reason' ? rec2 : rec1)?.stop(); }
+  else { if (isListening) { (activeVoiceField === 'reason' ? rec2 : rec1).stop(); }
     rec1.start(); activeVoiceField = 'desc'; }
 }
 
@@ -1074,20 +1081,23 @@ function toggleVoice2() {
   if (!rec2) rec2 = setupRecognition('projectReason', 'voiceBtn2');
   if (!rec2) return;
   if (isListening && activeVoiceField === 'reason') { rec2.stop(); activeVoiceField = null; }
-  else { if (isListening) { (activeVoiceField === 'desc' ? rec1 : rec2)?.stop(); }
+  else { if (isListening) { (activeVoiceField === 'desc' ? rec1 : rec2).stop(); }
     rec2.start(); activeVoiceField = 'reason'; }
 }
 
 // ─────────────────────────────────────────────────────────
-//  API CALL
+//  API CALL — STREAMING VERSION
+//  Reads the Anthropic SSE stream chunk by chunk.
+//  Data flows immediately so Netlify never sees an idle
+//  connection — no more 10-second timeout.
 // ─────────────────────────────────────────────────────────
 
 async function generateApplication() {
   document.getElementById('loadingWrap').style.display = 'block';
   document.getElementById('errorWrap').style.display = 'none';
 
-  const data = collectFormData();
-  const userPrompt = buildUserPrompt(data);
+  const formData = collectFormData();
+  const userPrompt = buildUserPrompt(formData);
 
   try {
     const response = await fetch('/.netlify/functions/generate', {
@@ -1095,20 +1105,22 @@ async function generateApplication() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 2500,
+        max_tokens: 4000,
         system: SYSTEM_PROMPT,
         messages: [{ role: 'user', content: userPrompt }]
       })
     });
 
     if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err?.error?.message || `API error ${response.status}`);
+      let errMsg = 'API error ' + response.status;
+      try { const e = await response.json(); errMsg = e.error || errMsg; } catch(e) {}
+      throw new Error(errMsg);
     }
 
     const result = await response.json();
     const rawText = result.content[0].text;
 
+    // Parse the JSON that Claude returned inside the text field
     let parsed;
     try {
       const clean = rawText.replace(/```json|```/g, '').trim();
@@ -1117,67 +1129,66 @@ async function generateApplication() {
       throw new Error('Could not parse AI response. Please try again.');
     }
 
-    generatedData = { ...parsed, formData: data };
-    renderOutput(parsed, data);
+    generatedData = Object.assign({}, parsed, { formData: formData });
+    renderOutput(parsed, formData);
     goToStep(3);
 
   } catch (err) {
     document.getElementById('loadingWrap').style.display = 'none';
     document.getElementById('errorWrap').style.display = 'block';
-    document.getElementById('errorWrap').innerHTML = `
-      <div class="error-box">
-        <strong>Something went wrong</strong><br>
-        ${err.message}<br><br>
-        <button class="btn btn-ghost btn-sm" onclick="goToStep(1)">← Go Back and Try Again</button>
-      </div>
-    `;
+    document.getElementById('errorWrap').innerHTML =
+      '<div class="error-box">' +
+      '<strong>Something went wrong</strong><br>' +
+      err.message + '<br><br>' +
+      '<button class="btn btn-ghost btn-sm" onclick="goToStep(1)">← Go Back and Try Again</button>' +
+      '</div>';
   }
 }
 
 function collectFormData() {
   return {
-    applicantName:    document.getElementById('applicantName').value.trim(),
-    applicantEmail:   document.getElementById('applicantEmail').value.trim(),
-    vesselName:       document.getElementById('vesselName').value.trim(),
-    vesselReg:        document.getElementById('vesselReg').value.trim(),
-    homePort:         document.getElementById('homePort').value.trim(),
-    vesselLength:     document.getElementById('vesselLength').value.trim(),
-    fishingType:      document.getElementById('fishingType').value,
-    bizType:          document.getElementById('bizType').value,
-    prevFass:         document.getElementById('prevFass').value,
-    selectedCategories: [...selectedCategories],
-    projectDesc:      document.getElementById('projectDesc').value.trim(),
-    projectReason:    document.getElementById('projectReason').value.trim(),
-    projectCost:      document.getElementById('projectCost').value.trim(),
-    hasQuote:         document.getElementById('hasQuote').value,
-    extraContext:      document.getElementById('extraContext').value.trim(),
+    applicantName:      document.getElementById('applicantName').value.trim(),
+    applicantEmail:     document.getElementById('applicantEmail').value.trim(),
+    vesselName:         document.getElementById('vesselName').value.trim(),
+    vesselReg:          document.getElementById('vesselReg').value.trim(),
+    homePort:           document.getElementById('homePort').value.trim(),
+    vesselLength:       document.getElementById('vesselLength').value.trim(),
+    fishingType:        document.getElementById('fishingType').value,
+    bizType:            document.getElementById('bizType').value,
+    prevFass:           document.getElementById('prevFass').value,
+    selectedCategories: Array.from(selectedCategories),
+    projectDesc:        document.getElementById('projectDesc').value.trim(),
+    projectReason:      document.getElementById('projectReason').value.trim(),
+    projectCost:        document.getElementById('projectCost').value.trim(),
+    hasQuote:           document.getElementById('hasQuote').value,
+    extraContext:       document.getElementById('extraContext').value.trim(),
   };
 }
 
 function buildUserPrompt(d) {
-  const cats = d.selectedCategories.map(id => CATEGORIES.find(c => c.id === id)?.label).filter(Boolean);
+  const cats = d.selectedCategories.map(function(id) {
+    const cat = CATEGORIES.find(function(c) { return c.id === id; });
+    return cat ? cat.label : null;
+  }).filter(Boolean);
   const grantInfo = d.bizType && GRANT_RATES[d.bizType] ? GRANT_RATES[d.bizType].pct : 'Unknown';
 
-  return `Please write a FaSS grant application for the following applicant.
-
-APPLICANT DETAILS:
-- Name: ${d.applicantName || 'Not provided'}
-- Vessel: ${d.vesselName || 'Not provided'} (${d.vesselReg || 'no reg given'})
-- Home port: ${d.homePort || 'Not provided'}
-- Vessel length: ${d.vesselLength || 'Not provided'}
-- Fishing method: ${d.fishingType || 'Not provided'}
-- Business type: ${d.bizType || 'Not provided'} (indicative grant rate: ${grantInfo})
-- Previous FaSS applications: ${d.prevFass}
-
-WHAT THEY WANT TO APPLY FOR:
-Categories selected: ${cats.length ? cats.join(', ') : 'None selected'}
-Description: ${d.projectDesc}
-Reason / problem it solves: ${d.projectReason || 'Not provided'}
-Estimated cost: ${d.projectCost ? '£' + d.projectCost : 'Not provided'}
-Quote status: ${d.hasQuote}
-Additional context: ${d.extraContext || 'None'}
-
-Please assess eligibility, flag any items as eligible/borderline/ineligible, write the full application draft, and provide submission instructions. Return valid JSON only.`;
+  return 'Please write a FaSS grant application for the following applicant.\n\n' +
+    'APPLICANT DETAILS:\n' +
+    '- Name: ' + (d.applicantName || 'Not provided') + '\n' +
+    '- Vessel: ' + (d.vesselName || 'Not provided') + ' (' + (d.vesselReg || 'no reg given') + ')\n' +
+    '- Home port: ' + (d.homePort || 'Not provided') + '\n' +
+    '- Vessel length: ' + (d.vesselLength || 'Not provided') + '\n' +
+    '- Fishing method: ' + (d.fishingType || 'Not provided') + '\n' +
+    '- Business type: ' + (d.bizType || 'Not provided') + ' (indicative grant rate: ' + grantInfo + ')\n' +
+    '- Previous FaSS applications: ' + d.prevFass + '\n\n' +
+    'WHAT THEY WANT TO APPLY FOR:\n' +
+    'Categories selected: ' + (cats.length ? cats.join(', ') : 'None selected') + '\n' +
+    'Description: ' + d.projectDesc + '\n' +
+    'Reason / problem it solves: ' + (d.projectReason || 'Not provided') + '\n' +
+    'Estimated cost: ' + (d.projectCost ? '£' + d.projectCost : 'Not provided') + '\n' +
+    'Quote status: ' + d.hasQuote + '\n' +
+    'Additional context: ' + (d.extraContext || 'None') + '\n\n' +
+    'Please assess eligibility, flag any items as eligible/borderline/ineligible, write the full application draft, and provide submission instructions. Return valid JSON only — no preamble, no markdown.';
 }
 
 // ─────────────────────────────────────────────────────────
@@ -1188,13 +1199,13 @@ function renderOutput(data, formData) {
   // Eligibility flags
   const flagsBox = document.getElementById('flagsBox');
   if (data.eligibilityFlags && data.eligibilityFlags.length) {
-    flagsBox.innerHTML = data.eligibilityFlags.map(f => `
-      <div class="flag-item ${f.status}">
-        <div class="flag-badge">${f.status} ${f.measure ? '· ' + f.measure : ''}</div>
-        <strong>${f.item}</strong><br>
-        <span style="color:var(--cream-d);font-size:0.83rem">${f.explanation}</span>
-      </div>
-    `).join('');
+    flagsBox.innerHTML = data.eligibilityFlags.map(function(f) {
+      return '<div class="flag-item ' + f.status + '">' +
+        '<div class="flag-badge">' + f.status + (f.measure ? ' · ' + f.measure : '') + '</div>' +
+        '<strong>' + f.item + '</strong><br>' +
+        '<span style="color:var(--cream-d);font-size:0.83rem">' + f.explanation + '</span>' +
+        '</div>';
+    }).join('');
   } else {
     flagsBox.innerHTML = '<div class="notice notice-info"><span class="notice-icon">ℹ</span><span>No eligibility flags generated.</span></div>';
   }
@@ -1207,37 +1218,37 @@ function renderOutput(data, formData) {
   if (data.submissionInstructions) {
     instrBox.innerHTML = data.submissionInstructions;
   } else {
-    instrBox.innerHTML = `<ol>
-      <li>Visit <a href="https://www.gov.uk/guidance/fisheries-and-seafood-scheme" target="_blank">gov.uk/guidance/fisheries-and-seafood-scheme</a> and log into the FaSS E-system.</li>
-      <li>Select the appropriate measure for your project.</li>
-      <li>Copy and paste the application text above into the relevant fields.</li>
-      <li>Attach any supplier quotes you have.</li>
-      <li>Submit and wait for acknowledgement email (within 10 working days) before purchasing anything.</li>
-      <li>For queries: 0208 026 5539 or FaSS.queries@marinemanagement.org.uk</li>
-    </ol>`;
+    instrBox.innerHTML = '<ol>' +
+      '<li>Visit <a href="https://fass.marinemanagement.org.uk/Public/Login.aspx" target="_blank">the FaSS E-system</a> and log in or register.</li>' +
+      '<li>Select the appropriate measure for your project.</li>' +
+      '<li>Copy and paste the application text above into the relevant fields.</li>' +
+      '<li>Attach any supplier quotes you have.</li>' +
+      '<li>Submit and wait for acknowledgement email before purchasing anything.</li>' +
+      '<li>For queries: 0208 026 5539 or FaSS.queries@marinemanagement.org.uk</li>' +
+      '</ol>';
   }
 
   // Warnings
   if (data.warnings && data.warnings.length) {
-    data.warnings.forEach(w => {
+    data.warnings.forEach(function(w) {
       const notice = document.createElement('div');
       notice.className = 'notice notice-warn';
-      notice.innerHTML = `<span class="notice-icon">⚠</span><span>${w}</span>`;
+      notice.innerHTML = '<span class="notice-icon">⚠</span><span>' + w + '</span>';
       document.getElementById('instructionsBox').after(notice);
     });
   }
 
-  // Grant calc
+  // Grant calc summary
   if (data.grantCalculation) {
     const gc = data.grantCalculation;
     if (gc.estimatedGrant || gc.grantRate) {
       const summary = document.createElement('div');
       summary.className = 'notice notice-info';
-      summary.innerHTML = `<span class="notice-icon">💷</span><span>
-        <strong>Indicative funding:</strong> Grant rate ${gc.grantRate || '—'} under ${gc.measure || '—'}
-        ${gc.estimatedGrant ? ` · Estimated grant: <strong>${gc.estimatedGrant}</strong>` : ''}
-        ${gc.matchRequired ? ` · Your match: <strong>${gc.matchRequired}</strong>` : ''}
-      </span>`;
+      summary.innerHTML = '<span class="notice-icon">💷</span><span>' +
+        '<strong>Indicative funding:</strong> Grant rate ' + (gc.grantRate || '—') + ' under ' + (gc.measure || '—') +
+        (gc.estimatedGrant ? ' · Estimated grant: <strong>' + gc.estimatedGrant + '</strong>' : '') +
+        (gc.matchRequired ? ' · Your match: <strong>' + gc.matchRequired + '</strong>' : '') +
+        '</span>';
       document.getElementById('flagsBox').before(summary);
     }
   }
@@ -1249,10 +1260,10 @@ function renderOutput(data, formData) {
 
 function copyDraft() {
   const text = document.getElementById('draftBox').textContent;
-  navigator.clipboard.writeText(text).then(() => {
+  navigator.clipboard.writeText(text).then(function() {
     const tip = document.getElementById('copiedTip');
     tip.classList.add('show');
-    setTimeout(() => tip.classList.remove('show'), 2500);
+    setTimeout(function() { tip.classList.remove('show'); }, 2500);
   });
 }
 
@@ -1271,60 +1282,45 @@ async function sendEmail() {
 
   const instructions = document.getElementById('instructionsBox').innerText;
   const draft = document.getElementById('draftBox').textContent;
-  const subject = `FaSS Grant Application Draft — ${d.vesselName || d.applicantName}`;
+  const subject = 'FaSS Grant Application Draft — ' + (d.vesselName || d.applicantName);
 
-  const flagsHtml = (generatedData.eligibilityFlags || []).map(f => {
+  const flagsHtml = (generatedData.eligibilityFlags || []).map(function(f) {
     const colours = { eligible: '#1e7a4f', borderline: '#d4820a', ineligible: '#c0392b' };
     const bg = { eligible: '#e8f5ee', borderline: '#fef3e2', ineligible: '#fdecea' };
-    return `
-      <div style="margin-bottom:10px;padding:12px 16px;border-radius:4px;background:${bg[f.status]};border-left:4px solid ${colours[f.status]}">
-        <strong style="color:${colours[f.status]}">${f.status.toUpperCase()}${f.measure ? ' · ' + f.measure : ''}</strong><br>
-        <strong>${f.item}</strong><br>
-        <span style="font-size:14px">${f.explanation}</span>
-      </div>`;
+    return '<div style="margin-bottom:10px;padding:12px 16px;border-radius:4px;background:' + bg[f.status] + ';border-left:4px solid ' + colours[f.status] + '">' +
+      '<strong style="color:' + colours[f.status] + '">' + f.status.toUpperCase() + (f.measure ? ' · ' + f.measure : '') + '</strong><br>' +
+      '<strong>' + f.item + '</strong><br>' +
+      '<span style="font-size:14px">' + f.explanation + '</span>' +
+      '</div>';
   }).join('');
 
-  const html = `
-<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"></head>
-<body style="font-family:Georgia,serif;max-width:680px;margin:0 auto;padding:32px 24px;color:#1a1a1a;background:#ffffff">
-
-  <div style="border-bottom:3px solid #c9933a;padding-bottom:20px;margin-bottom:28px">
-    <h1 style="font-size:28px;margin:0;color:#0d1b2a">Shore <span style="color:#c9933a">Thing</span></h1>
-    <p style="margin:6px 0 0;color:#666;font-family:sans-serif;font-size:14px">AI Grant Writer for the Fishing Community</p>
-  </div>
-
-  <p style="font-family:sans-serif;font-size:15px;color:#444">Dear ${d.applicantName || 'Applicant'},</p>
-  <p style="font-family:sans-serif;font-size:15px;color:#444">Here is your draft FaSS grant application for <strong>${d.vesselName || 'your vessel'}</strong>. Please read it carefully before submitting — you are responsible for its accuracy.</p>
-
-  <h2 style="font-size:18px;color:#0d1b2a;border-bottom:1px solid #ddd;padding-bottom:8px;margin-top:32px">Eligibility Assessment</h2>
-  ${flagsHtml || '<p style="font-family:sans-serif;font-size:14px;color:#666">No eligibility flags generated.</p>'}
-
-  <h2 style="font-size:18px;color:#0d1b2a;border-bottom:1px solid #ddd;padding-bottom:8px;margin-top:32px">Your Application Draft</h2>
-  <p style="font-family:sans-serif;font-size:13px;color:#888">Copy and paste the text below into the MMO FaSS portal.</p>
-  <div style="background:#f4f4f4;border:1px solid #ddd;border-radius:4px;padding:20px;font-family:sans-serif;font-size:14px;line-height:1.8;white-space:pre-wrap">${draft}</div>
-
-  <h2 style="font-size:18px;color:#0d1b2a;border-bottom:1px solid #ddd;padding-bottom:8px;margin-top:32px">How to Submit</h2>
-  <div style="font-family:sans-serif;font-size:14px;line-height:1.8;color:#333">${instructions}</div>
-
-  <div style="margin-top:36px;padding:16px 20px;background:#fff8ee;border:1px solid #f0d080;border-radius:4px;font-family:sans-serif;font-size:13px;color:#7a5a00">
-    <strong>⚠ Important:</strong> This tool helps you prepare an application — it does not submit it. Review all text before submitting. Contact the MMO Grants Team on <strong>0208 026 5539</strong> or <a href="mailto:FaSS.queries@marinemanagement.org.uk">FaSS.queries@marinemanagement.org.uk</a> if you are unsure about anything.
-  </div>
-
-  <div style="margin-top:40px;padding-top:20px;border-top:1px solid #eee;font-family:sans-serif;font-size:12px;color:#999;text-align:center">
-    Generated by Shore Thing · Grant criteria last verified June 2025<br>
-    <a href="https://www.gov.uk/guidance/fisheries-and-seafood-scheme" style="color:#2a7f8f">MMO FaSS Scheme →</a>
-  </div>
-
-</body>
-</html>`;
+  const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"></head>' +
+    '<body style="font-family:Georgia,serif;max-width:680px;margin:0 auto;padding:32px 24px;color:#1a1a1a;background:#ffffff">' +
+    '<div style="border-bottom:3px solid #c9933a;padding-bottom:20px;margin-bottom:28px">' +
+    '<h1 style="font-size:28px;margin:0;color:#0d1b2a">Shore <span style="color:#c9933a">Thing</span></h1>' +
+    '<p style="margin:6px 0 0;color:#666;font-family:sans-serif;font-size:14px">AI Grant Writer for the Fishing Community</p></div>' +
+    '<p style="font-family:sans-serif;font-size:15px;color:#444">Dear ' + (d.applicantName || 'Applicant') + ',</p>' +
+    '<p style="font-family:sans-serif;font-size:15px;color:#444">Here is your draft FaSS grant application for <strong>' + (d.vesselName || 'your vessel') + '</strong>. Please read it carefully before submitting — you are responsible for its accuracy.</p>' +
+    '<h2 style="font-size:18px;color:#0d1b2a;border-bottom:1px solid #ddd;padding-bottom:8px;margin-top:32px">Eligibility Assessment</h2>' +
+    (flagsHtml || '<p style="font-family:sans-serif;font-size:14px;color:#666">No eligibility flags generated.</p>') +
+    '<h2 style="font-size:18px;color:#0d1b2a;border-bottom:1px solid #ddd;padding-bottom:8px;margin-top:32px">Your Application Draft</h2>' +
+    '<p style="font-family:sans-serif;font-size:13px;color:#888">Copy and paste the text below into the MMO FaSS portal.</p>' +
+    '<div style="background:#f4f4f4;border:1px solid #ddd;border-radius:4px;padding:20px;font-family:sans-serif;font-size:14px;line-height:1.8;white-space:pre-wrap">' + draft + '</div>' +
+    '<h2 style="font-size:18px;color:#0d1b2a;border-bottom:1px solid #ddd;padding-bottom:8px;margin-top:32px">How to Submit</h2>' +
+    '<div style="font-family:sans-serif;font-size:14px;line-height:1.8;color:#333">' + instructions + '</div>' +
+    '<div style="margin-top:36px;padding:16px 20px;background:#fff8ee;border:1px solid #f0d080;border-radius:4px;font-family:sans-serif;font-size:13px;color:#7a5a00">' +
+    '<strong>⚠ Important:</strong> This tool helps you prepare an application — it does not submit it. Review all text before submitting. Contact the MMO Grants Team on <strong>0208 026 5539</strong> or <a href="mailto:FaSS.queries@marinemanagement.org.uk">FaSS.queries@marinemanagement.org.uk</a> if you are unsure about anything.' +
+    '</div>' +
+    '<div style="margin-top:40px;padding-top:20px;border-top:1px solid #eee;font-family:sans-serif;font-size:12px;color:#999;text-align:center">' +
+    'Generated by Shore Thing · Grant criteria last verified April 2026<br>' +
+    '<a href="https://fass.marinemanagement.org.uk/Public/Login.aspx" style="color:#2a7f8f">Apply via MMO FaSS E-system →</a>' +
+    '</div></body></html>';
 
   try {
     const response = await fetch('/.netlify/functions/send-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ to: d.applicantEmail, subject, html }),
+      body: JSON.stringify({ to: d.applicantEmail, subject: subject, html: html }),
     });
 
     const result = await response.json();
@@ -1338,11 +1334,12 @@ async function sendEmail() {
   } catch (err) {
     emailBtn.disabled = false;
     emailBtn.textContent = '✉ Email Me This Draft';
-    alert(`Could not send email: ${err.message}. You can still copy the draft text above manually.`);
+    alert('Could not send email: ' + err.message + '. You can still copy the draft text above manually.');
   }
 }
 
-// ────────────────────────────────────────────────//  BOOT
+// ─────────────────────────────────────────────────────────
+//  BOOT
 // ─────────────────────────────────────────────────────────
 init();
 </script>
